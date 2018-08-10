@@ -17,13 +17,16 @@ var gulp = require('gulp');
 var jsdoc = require('gulp-jsdoc3');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
-var ghPages = require('gulp-gh-pages');
+var ghPages = require('gh-pages');
 var mustache = require('gulp-mustache');
 var browserify = require('browserify');
 var transform = require('vinyl-transform');
 var path = require('path');
 var fs = require('fs');
-var through = require('through2')
+var gracefulFs = require('graceful-fs');
+var through = require('through2');
+
+gracefulFs.gracefulify(fs);
 
 gulp.task('browser-package', function() {
 
@@ -60,8 +63,7 @@ gulp.task('browser-package', function() {
 
 // pushes jsdoc changes to gh-pages branch
 gulp.task('gh-pages', function(cb) {
-  return gulp.src('../doc/**/*')
-     .pipe(ghPages());
+  ghPages.publish(path.join(__dirname, '..', 'doc'), cb);
 });
 
 gulp.task('jsdoc', function (cb) {
@@ -113,7 +115,7 @@ gulp.task('documentation', function(cb) {
        'currentYear': new Date().getFullYear()
      }))
     .pipe(rename("./Readme.md"))
-    .pipe(gulp.dest('../'))
+    .pipe(gulp.dest('../'));
 
 });
 
