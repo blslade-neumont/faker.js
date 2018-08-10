@@ -33,7 +33,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="faker.html">faker</a></li><li><a href="faker.address.html">faker.address</a></li><li><a href="faker.commerce.html">faker.commerce</a></li><li><a href="faker.company.html">faker.company</a></li><li><a href="faker.database.html">faker.database</a></li><li><a href="faker.date.html">faker.date</a></li><li><a href="faker.finance.html">faker.finance</a></li><li><a href="faker.hacker.html">faker.hacker</a></li><li><a href="faker.helpers.html">faker.helpers</a></li><li><a href="faker.image.html">faker.image</a></li><li><a href="faker.internet.html">faker.internet</a></li><li><a href="faker.lorem.html">faker.lorem</a></li><li><a href="faker.name.html">faker.name</a></li><li><a href="faker.phone.html">faker.phone</a></li><li><a href="faker.random.html">faker.random</a></li><li><a href="faker.system.html">faker.system</a></li>
+					<li><a href="faker.html">faker</a></li><li><a href="faker.address.html">faker.address</a></li><li><a href="faker.commerce.html">faker.commerce</a></li><li><a href="faker.company.html">faker.company</a></li><li><a href="faker.database.html">faker.database</a></li><li><a href="faker.date.html">faker.date</a></li><li><a href="faker.finance.html">faker.finance</a></li><li><a href="faker.hacker.html">faker.hacker</a></li><li><a href="faker.helpers.html">faker.helpers</a></li><li><a href="faker.image.html">faker.image</a></li><li><a href="faker.internet.html">faker.internet</a></li><li><a href="faker.lorem.html">faker.lorem</a></li><li><a href="faker.name.html">faker.name</a></li><li><a href="faker.phone.html">faker.phone</a></li><li><a href="faker.random.html">faker.random</a></li><li><a href="faker.system.html">faker.system</a></li><li><a href="faker.unique.html">faker.unique</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#unique">unique</a></li>
 				</ul>
 			</li>
 			
@@ -126,6 +133,9 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>stateAbbr</li>
 <li>latitude</li>
 <li>longitude</li>
+<li>direction</li>
+<li>cardinalDirection</li>
+<li>ordinalDirection</li>
 </ul>
 </li>
 <li>commerce<ul>
@@ -164,6 +174,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>future</li>
 <li>between</li>
 <li>recent</li>
+<li>soon</li>
 <li>month</li>
 <li>weekday</li>
 </ul>
@@ -172,6 +183,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>finance<ul>
 <li>account</li>
 <li>accountName</li>
+<li>routingNumber</li>
 <li>mask</li>
 <li>amount</li>
 <li>transactionType</li>
@@ -179,6 +191,9 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>currencyName</li>
 <li>currencySymbol</li>
 <li>bitcoinAddress</li>
+<li>creditCardNumber</li>
+<li>creditCardCVV</li>
+<li>ethereumAddress</li>
 <li>iban</li>
 <li>bic</li>
 </ul>
@@ -197,6 +212,9 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>slugify</li>
 <li>replaceSymbolWithNumber</li>
 <li>replaceSymbols</li>
+<li>replaceCreditCardSymbols</li>
+<li>repeatString</li>
+<li>regexpStyleStringParse</li>
 <li>shuffle</li>
 <li>mustache</li>
 <li>createCard</li>
@@ -260,6 +278,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>lastName</li>
 <li>findName</li>
 <li>jobTitle</li>
+<li>gender</li>
 <li>prefix</li>
 <li>suffix</li>
 <li>title</li>
@@ -277,6 +296,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>random<ul>
 <li>number</li>
 <li>arrayElement</li>
+<li>arrayElements</li>
 <li>objectElement</li>
 <li>uuid</li>
 <li>boolean</li>
@@ -285,6 +305,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>image</li>
 <li>locale</li>
 <li>alphaNumeric</li>
+<li>hexaDecimal</li>
 </ul>
 </li>
 <li>system<ul>
@@ -300,6 +321,7 @@ var randomCard = faker.helpers.createCard(); // random contact card containing m
 <li>semver</li>
 </ul>
 </li>
+<li>unique</li>
 </ul>
 <h2>Localization</h2><p>As of version <code>v2.0.0</code> faker.js has support for multiple localities.</p>
 <p>The default language locale is set to English.</p>
@@ -332,9 +354,11 @@ faker.locale = &quot;de&quot;;</code></pre><ul>
 <li>ko</li>
 <li>nb_NO</li>
 <li>nep</li>
+<li>nl_BE</li>
 <li>nl</li>
 <li>pl</li>
 <li>pt_BR</li>
+<li>ro</li>
 <li>ru</li>
 <li>sk</li>
 <li>sv</li>
@@ -364,6 +388,8 @@ make test</code></pre><p>You can view a code coverage report generated in covera
 See: https://github.com/pateketrueke/json-schema-faker/</p>
 <h3>CLI</h3><p>Run faker generators from Command Line.
 See: https://github.com/lestoni/faker-cli</p>
+<h3>Mocker data generator</h3><p>Minimal JSON data generator, fakerJs is one of the providers.
+See:  https://github.com/danibram/mocker-data-generator</p>
 <p><strong>Want to see your project added here? Let us know!</strong></p>
 <h3>Meteor</h3><h4>Meteor Installation</h4><pre class="prettyprint source"><code>meteor add practicalmeteor:faker</code></pre><h4>Meteor Usage, both client and server</h4><pre class="prettyprint source lang-js"><code>var randomName = faker.name.findName(); // Rowan Nikolaus
 var randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
@@ -435,9 +461,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2017-02-21T13:01:35-05:00
+		on 2018-08-10T10:05:41-06:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
