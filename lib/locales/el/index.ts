@@ -1,0 +1,32 @@
+
+
+export const title = "Ελληνικά";
+export const separator = " & ";
+import address = require('./address');
+export { address };
+import credit_card = require('./credit_card');
+export { credit_card };
+import company = require('./company');
+export { company };
+import internet = require('./internet');
+export { internet };
+import lorem = require('./lorem');
+export { lorem };
+import name = require('./name');
+export { name };
+import phone_number = require('./phone_number');
+export { phone_number };
+import cell_phone = require('./cell_phone');
+export { cell_phone };
+import business = require('./business');
+export { business };
+import commerce = require('./commerce');
+export { commerce };
+import team = require('./team');
+export { team };
+import hacker = require('./hacker');
+export { hacker };
+import app = require('./app');
+export { app };
+import finance = require('./finance');
+export { finance };

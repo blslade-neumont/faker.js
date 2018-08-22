@@ -1,0 +1,4 @@
+export = [
+  "MBA",
+  "Phd."
+];

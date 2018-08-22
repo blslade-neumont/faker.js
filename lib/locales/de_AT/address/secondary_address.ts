@@ -1,0 +1,5 @@
+export = [
+  "Apt. ###",
+  "Zimmer ###",
+  "# OG"
+];

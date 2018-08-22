@@ -1,0 +1,5 @@
+export = [
+    "fizzing",
+    "rolling",
+    "shining"
+];

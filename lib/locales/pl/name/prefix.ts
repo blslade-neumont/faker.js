@@ -1,0 +1,4 @@
+export = [
+  "Pan",
+  "Pani"
+];

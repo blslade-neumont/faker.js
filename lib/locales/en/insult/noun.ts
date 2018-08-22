@@ -1,0 +1,5 @@
+export = [
+    "lizard",
+    "bird",
+    "wizard"
+];

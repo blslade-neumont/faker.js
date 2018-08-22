@@ -1,0 +1,4 @@
+export = [
+  "k-dze",
+  "kundze"
+];

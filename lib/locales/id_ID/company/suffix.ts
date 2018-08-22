@@ -1,0 +1,4 @@
+export = [
+  "(Persero) Tbk",
+  "Tbk"
+];

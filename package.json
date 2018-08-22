@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "node_modules/.bin/jshint ./lib --config ./.jshintrc",
     "test": "node_modules/.bin/mocha test/*.*.js",
-    "build": "cd build && \"../node_modules/.bin/gulp\" && cd ../",
+    "build": "tsc && cd build && \"../node_modules/.bin/gulp\" && cd ../",
     "doc": "jsdoc -c conf.json -t ./node_modules/ink-docstrap/template -R README.md lib",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -60,6 +60,7 @@
     "optimist": "0.3.5",
     "sinon": "1.4.2",
     "through2": "2.0.0",
+    "typescript": "^3.0.1",
     "vinyl-transform": "0.0.1"
   },
   "license": "MIT",

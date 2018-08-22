@@ -1,0 +1,5 @@
+export = [
+    "fabulous",
+    "brilliant",
+    "glittery"
+];

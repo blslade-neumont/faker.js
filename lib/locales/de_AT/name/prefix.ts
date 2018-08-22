@@ -1,0 +1,4 @@
+export = [
+  "Dr.",
+  "Prof. Dr."
+];

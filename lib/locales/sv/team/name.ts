@@ -1,0 +1,3 @@
+export = [
+  "#{Address.city} #{suffix}"
+];
