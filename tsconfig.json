@@ -15,13 +15,7 @@
         "alwaysStrict": true,
         "noImplicitAny": true,
         "pretty": true,
-        "declaration": true,
-        "types": [
-            "express",
-            "lodash",
-            "node",
-            "pluralize"
-        ]
+        "declaration": true
     },
     "compileOnSave": false,
     "buildOnSave": false
