@@ -119,10 +119,9 @@ class Random {
    * @method faker.random.uuid
    */
   uuid() {
-      var self = this;
       var RFC4122_TEMPLATE = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-      var replacePlaceholders = function(placeholder: string) {
-          var random = self.number({ min: 0, max: 15 });
+      var replacePlaceholders = (placeholder: string) => {
+          var random = this.number({ min: 0, max: 15 });
           var value = placeholder == 'x' ? random : (random &0x3 | 0x8);
           return value.toString(16);
       };

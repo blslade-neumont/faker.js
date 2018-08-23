@@ -58,27 +58,27 @@ class Faker {
     this.locale = this.locale || opts.locale || "en";
     this.localeFallback = this.localeFallback || opts.localeFallback || "en";
 
-    this.fake = new Fake(self).fake;
-    this.unique = bindAll(new Unique(self).unique);
-    this.random = bindAll(new Random(self));
-    this.helpers = new Helpers(self);
-    this.name = bindAll(new Name(self));
-    this.address = bindAll(new Address(self));
-    this.company = bindAll(new Company(self));
-    this.finance = bindAll(new Finance(self));
-    this.image = bindAll(new Image(self));
-    this.lorem = bindAll(new Lorem(self));
-    this.hacker = bindAll(new Hacker(self));
-    this.internet = bindAll(new Internet(self));
-    this.database = bindAll(new Database(self));
-    this.phone = bindAll(new Phone(self));
-    this.date = bindAll(new _Date(self));
-    this.commerce = bindAll(new Commerce(self));
-    this.system = bindAll(new System(self));
-    this.git = bindAll(new Git(self));
-    this.insult = bindAll(new Insult(self));
-    this.statistic = bindAll(new Statistic(self));
-    this.game_name = bindAll(new GameName(self));
+    this.fake = new Fake(this).fake;
+    this.unique = bindAll(new Unique(this).unique);
+    this.random = bindAll(new Random(this));
+    this.helpers = new Helpers(this);
+    this.name = bindAll(new Name(this));
+    this.address = bindAll(new Address(this));
+    this.company = bindAll(new Company(this));
+    this.finance = bindAll(new Finance(this));
+    this.image = bindAll(new Image(this));
+    this.lorem = bindAll(new Lorem(this));
+    this.hacker = bindAll(new Hacker(this));
+    this.internet = bindAll(new Internet(this));
+    this.database = bindAll(new Database(this));
+    this.phone = bindAll(new Phone(this));
+    this.date = bindAll(new _Date(this));
+    this.commerce = bindAll(new Commerce(this));
+    this.system = bindAll(new System(this));
+    this.git = bindAll(new Git(this));
+    this.insult = bindAll(new Insult(this));
+    this.statistic = bindAll(new Statistic(this));
+    this.game_name = bindAll(new GameName(this));
 
     var _definitions: { [key: string]: string | string[] } = {
       "name": ["first_name", "middle_name", "last_name", "prefix", "suffix", "gender", "title", "male_first_name", "female_first_name", "male_middle_name", "female_middle_name", "male_last_name", "female_last_name"],
@@ -114,7 +114,7 @@ class Faker {
 
       (<string[]>_definitions[d]).forEach(p => {
         Object.defineProperty(this.definitions[d], p, {
-          get: function () {
+          get: () => {
             if (typeof this.locales[this.locale][d] === "undefined" || typeof this.locales[this.locale][d][p] === "undefined") {
               // certain localization sets contain less data then others.
               // in the case of a missing definition, use the default localeFallback to substitute the missing set data
