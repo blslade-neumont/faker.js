@@ -1,10 +1,14 @@
+import ibanLib = require("./iban");
+
 /**
  * @namespace faker.finance
  */
-var Finance = function (faker) {
-  var ibanLib = require("./iban");
-  var Helpers = faker.helpers,
-      self = this;
+class Finance {
+  constructor(private faker: any) {
+    this.Helpers = this.faker.helpers;
+  }
+
+  private readonly Helpers: any;
 
   /**
    * account
@@ -12,37 +16,30 @@ var Finance = function (faker) {
    * @method faker.finance.account
    * @param {number} length
    */
-  self.account = function (length) {
-
-      length = length || 8;
-
+  account(length: number = 8) {
       var template = '';
-
       for (var i = 0; i < length; i++) {
           template = template + '#';
       }
-      length = null;
-      return Helpers.replaceSymbolWithNumber(template);
-  };
+      return this.Helpers.replaceSymbolWithNumber(template);
+  }
 
   /**
    * accountName
    *
    * @method faker.finance.accountName
    */
-  self.accountName = function () {
-
-      return [Helpers.randomize(faker.definitions.finance.account_type), 'Account'].join(' ');
-  };
+  accountName() {
+      return [this.Helpers.randomize(this.faker.definitions.finance.account_type), 'Account'].join(' ');
+  }
 
   /**
    * routingNumber
    *
    * @method faker.finance.routingNumber
    */
-  self.routingNumber = function () {
-
-      var routingNumber = Helpers.replaceSymbolWithNumber('########');
+  routingNumber() {
+      var routingNumber = this.Helpers.replaceSymbolWithNumber('########');
 
       // Modules 10 straight summation.
       var sum = 0;
@@ -64,12 +61,9 @@ var Finance = function (faker) {
    * @param {boolean} parens
    * @param {boolean} ellipsis
    */
-  self.mask = function (length, parens, ellipsis) {
-
+  mask(length: number = 4, parens: boolean = true, ellipsis: boolean = true) {
       //set defaults
-      length = (length == 0 || !length || typeof length == 'undefined') ? 4 : length;
-      parens = (parens === null) ? true : parens;
-      ellipsis = (ellipsis === null) ? true : ellipsis;
+      length = length || 4;
 
       //create a template for length
       var template = '';
@@ -84,10 +78,10 @@ var Finance = function (faker) {
       template = (parens) ? ['(', template, ')'].join('') : template;
 
       //generate random numbers
-      template = Helpers.replaceSymbolWithNumber(template);
+      template = this.Helpers.replaceSymbolWithNumber(template);
 
       return template;
-  };
+  }
 
   //min and max take in minimum and maximum amounts, dec is the decimal place you want rounded to, symbol is $, €, £, etc
   //NOTE: this returns a string representation of the value, if you want a number use parseFloat and no symbol
@@ -103,70 +97,65 @@ var Finance = function (faker) {
    *
    * @return {string}
    */
-  self.amount = function (min, max, dec, symbol) {
-
-      min = min || 0;
-      max = max || 1000;
-      dec = dec === undefined ? 2 : dec;
-      symbol = symbol || '';
-      var randValue = faker.random.number({ max: max, min: min, precision: Math.pow(10, -dec) });
+  amount(min: number = 0, max: number = 1000, dec: number = 2, symbol: string = '') {
+      var randValue = this.faker.random.number({ max: max, min: min, precision: Math.pow(10, -dec) });
 
       return symbol + randValue.toFixed(dec);
-  };
+  }
 
   /**
    * transactionType
    *
    * @method faker.finance.transactionType
    */
-  self.transactionType = function () {
-      return Helpers.randomize(faker.definitions.finance.transaction_type);
-  };
+  transactionType() {
+      return this.Helpers.randomize(this.faker.definitions.finance.transaction_type);
+  }
 
   /**
    * currencyCode
    *
    * @method faker.finance.currencyCode
    */
-  self.currencyCode = function () {
-      return faker.random.objectElement(faker.definitions.finance.currency)['code'];
-  };
+  currencyCode() {
+      return this.faker.random.objectElement(this.faker.definitions.finance.currency)['code'];
+  }
 
   /**
    * currencyName
    *
    * @method faker.finance.currencyName
    */
-  self.currencyName = function () {
-      return faker.random.objectElement(faker.definitions.finance.currency, 'key');
-  };
+  currencyName() {
+      return this.faker.random.objectElement(this.faker.definitions.finance.currency, 'key');
+  }
 
   /**
    * currencySymbol
    *
    * @method faker.finance.currencySymbol
    */
-  self.currencySymbol = function () {
+  currencySymbol() {
       var symbol;
 
       while (!symbol) {
-          symbol = faker.random.objectElement(faker.definitions.finance.currency)['symbol'];
+          symbol = this.faker.random.objectElement(this.faker.definitions.finance.currency)['symbol'];
       }
       return symbol;
-  };
+  }
 
   /**
    * bitcoinAddress
    *
    * @method  faker.finance.bitcoinAddress
    */
-  self.bitcoinAddress = function () {
-    var addressLength = faker.random.number({ min: 27, max: 34 });
+  bitcoinAddress() {
+    var addressLength = this.faker.random.number({ min: 27, max: 34 });
 
-    var address = faker.random.arrayElement(['1', '3']);
+    var address = this.faker.random.arrayElement(['1', '3']);
 
     for (var i = 0; i < addressLength - 1; i++)
-      address += faker.random.alphaNumeric().toUpperCase();
+      address += this.faker.random.alphaNumeric().toUpperCase();
 
     return address;
   }
@@ -176,16 +165,15 @@ var Finance = function (faker) {
    * @method faker.finance.creditCardNumber
    * @param {string} provider | scheme
   */
-  self.creditCardNumber = function(provider){
-    provider = provider || "";
+  creditCardNumber(provider: string = '') {
     var format, formats;
-    var localeFormat = faker.definitions.finance.credit_card;
+    var localeFormat = this.faker.definitions.finance.credit_card;
     if (provider in localeFormat) {
       formats = localeFormat[provider]; // there chould be multiple formats
       if (typeof formats === "string") {
         format = formats;
       } else {
-        format = faker.random.arrayElement(formats);
+        format = this.faker.random.arrayElement(formats);
       }
     } else if (provider.match(/#/)) { // The user chose an optional scheme
       format = provider;
@@ -194,47 +182,48 @@ var Finance = function (faker) {
         format = localeFormat;
       } else if( typeof localeFormat === "object") {
         // Credit cards are in a object structure
-        formats = faker.random.objectElement(localeFormat, "value"); // There chould be multiple formats
+        formats = this.faker.random.objectElement(localeFormat, "value"); // There chould be multiple formats
         if (typeof formats === "string") {
           format = formats;
         } else {
-          format = faker.random.arrayElement(formats);
+          format = this.faker.random.arrayElement(formats);
         }
       }
     }
     format = format.replace(/\//g,"")
-    return Helpers.replaceCreditCardSymbols(format);
-  };
+    return this.Helpers.replaceCreditCardSymbols(format);
+  }
+  
   /**
    * Credit card CVV
    * @method faker.finance.creditCardNumber
   */
-  self.creditCardCVV = function() {
+  creditCardCVV() {
     var cvv = "";
     for (var i = 0; i < 3; i++) {
-      cvv += faker.random.number({max:9}).toString();
+      cvv += this.faker.random.number({max:9}).toString();
     }
     return cvv;
-  };
+  }
 
   /**
    * ethereumAddress
    *
    * @method  faker.finance.ethereumAddress
    */
-  self.ethereumAddress = function () {
-    var address = faker.random.hexaDecimal(40);
+  ethereumAddress() {
+    var address = this.faker.random.hexaDecimal(40);
 
     return address;
-  };
+  }
 
   /**
    * iban
    *
    * @method  faker.finance.iban
    */
-  self.iban = function (formatted) {
-      var ibanFormat = faker.random.arrayElement(ibanLib.formats);
+  iban(formatted: boolean = false) {
+      var ibanFormat = this.faker.random.arrayElement(ibanLib.formats);
       var s = "";
       var count = 0;
       for (var b = 0; b < ibanFormat.bban.length; b++) {
@@ -243,24 +232,24 @@ var Finance = function (faker) {
           count += bban.count;
           while (c > 0) {
               if (bban.type == "a") {
-                  s += faker.random.arrayElement(ibanLib.alpha);
+                  s += this.faker.random.arrayElement(ibanLib.alpha);
               } else if (bban.type == "c") {
-                  if (faker.random.number(100) < 80) {
-                      s += faker.random.number(9);
+                  if (this.faker.random.number(100) < 80) {
+                      s += this.faker.random.number(9);
                   } else {
-                      s += faker.random.arrayElement(ibanLib.alpha);
+                      s += this.faker.random.arrayElement(ibanLib.alpha);
                   }
               } else {
-                  if (c >= 3 && faker.random.number(100) < 30) {
-                      if (faker.random.boolean()) {
-                          s += faker.random.arrayElement(ibanLib.pattern100);
+                  if (c >= 3 && this.faker.random.number(100) < 30) {
+                      if (this.faker.random.boolean()) {
+                          s += this.faker.random.arrayElement(ibanLib.pattern100);
                           c -= 2;
                       } else {
-                          s += faker.random.arrayElement(ibanLib.pattern10);
+                          s += this.faker.random.arrayElement(ibanLib.pattern10);
                           c--;
                       }
                   } else {
-                      s += faker.random.number(9);
+                      s += this.faker.random.number(9);
                   }
               }
               c--;
@@ -269,29 +258,29 @@ var Finance = function (faker) {
       }
       var checksum = 98 - ibanLib.mod97(ibanLib.toDigitString(s + ibanFormat.country + "00"));
       if (checksum < 10) {
-          checksum = "0" + checksum;
+          checksum = <any>("0" + checksum);
       }
       var iban = ibanFormat.country + checksum + s;
-      return formatted ? iban.match(/.{1,4}/g).join(" ") : iban;
-  };
+      return formatted ? iban.match(/.{1,4}/g)!.join(" ") : iban;
+  }
 
   /**
    * bic
    *
    * @method  faker.finance.bic
    */
-  self.bic = function () {
+  bic() {
       var vowels = ["A", "E", "I", "O", "U"];
-      var prob = faker.random.number(100);
-      return Helpers.replaceSymbols("???") +
-          faker.random.arrayElement(vowels) +
-          faker.random.arrayElement(ibanLib.iso3166) +
-          Helpers.replaceSymbols("?") + "1" +
+      var prob = this.faker.random.number(100);
+      return this.Helpers.replaceSymbols("???") +
+          this.faker.random.arrayElement(vowels) +
+          this.faker.random.arrayElement(ibanLib.iso3166) +
+          this.Helpers.replaceSymbols("?") + "1" +
           (prob < 10 ?
-              Helpers.replaceSymbols("?" + faker.random.arrayElement(vowels) + "?") :
+              this.Helpers.replaceSymbols("?" + this.faker.random.arrayElement(vowels) + "?") :
           prob < 40 ?
-              Helpers.replaceSymbols("###") : "");
-  };
-};
+              this.Helpers.replaceSymbols("###") : "");
+  }
+}
 
-module['exports'] = Finance;
+export = Finance;

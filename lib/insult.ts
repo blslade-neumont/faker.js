@@ -2,16 +2,16 @@
  *
  * @namespace faker.insult
  */
-function Insult (faker) {
-    var self = this;
+class Insult {
+    constructor(private faker: any) { }
   
     /**
      * adjective
      *
      * @method faker.insult.adjective
      */
-    self.adjective = function () {
-      return faker.random.arrayElement(faker.definitions.insult.adjective);
+    adjective() {
+      return this.faker.random.arrayElement(this.faker.definitions.insult.adjective);
     };
   
     /**
@@ -19,8 +19,8 @@ function Insult (faker) {
      *
      * @method faker.insult.noun
      */
-    self.noun = function () {
-      return faker.random.arrayElement(faker.definitions.insult.noun);
+    noun() {
+      return this.faker.random.arrayElement(this.faker.definitions.insult.noun);
     };
   
     /**
@@ -28,8 +28,8 @@ function Insult (faker) {
      *
      * @method faker.insult.ingverb
      */
-    self.ingverb = function () {
-      return faker.random.arrayElement(faker.definitions.insult.ingverb);
+    ingverb() {
+      return this.faker.random.arrayElement(this.faker.definitions.insult.ingverb);
     };
   
     /**
@@ -37,28 +37,24 @@ function Insult (faker) {
      *
      * @method faker.insult.phrase
      */
-    self.phrase = function () {
-        if(!faker.definitions.insult 
-            || !faker.definitions.insult.phrase 
-            || !faker.definitions.insult.noun 
-            || !faker.definitions.insult.ingverb 
-            || !faker.definitions.insult.adjective) {
-                return faker.random.randomWords(3);
+    phrase() {
+        if(!this.faker.definitions.insult 
+            || !this.faker.definitions.insult.phrase 
+            || !this.faker.definitions.insult.noun 
+            || !this.faker.definitions.insult.ingverb 
+            || !this.faker.definitions.insult.adjective) {
+                return this.faker.random.randomWords(3);
         } else {
             var data = {
-                adjective: self.adjective,
-                ingverb: self.ingverb,
-                noun: self.noun,
+                adjective: this.adjective.bind(this),
+                ingverb: this.ingverb.bind(this),
+                noun: this.noun.bind(this),
             };
         
-            var phrase = faker.random.arrayElement(faker.definitions.insult.phrase);
-            return faker.helpers.mustache(phrase, data);
+            var phrase = this.faker.random.arrayElement(this.faker.definitions.insult.phrase);
+            return this.faker.helpers.mustache(phrase, data);
         }
-    };
-    
-    return self;
-  
+    }
 }
-  
-  module['exports'] = Insult;
-  
+
+export = Insult;

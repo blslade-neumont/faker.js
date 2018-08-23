@@ -2,8 +2,8 @@
  *
  * @namespace faker.phone
  */
-var Phone = function (faker) {
-  var self = this;
+class Phone {
+  constructor(private faker: any) { }
 
   /**
    * phoneNumber
@@ -11,10 +11,10 @@ var Phone = function (faker) {
    * @method faker.phone.phoneNumber
    * @param {string} format
    */
-  self.phoneNumber = function (format) {
-      format = format || faker.phone.phoneFormats();
-      return faker.helpers.replaceSymbolWithNumber(format);
-  };
+  phoneNumber(format: string) {
+      format = format || this.faker.phone.phoneFormats();
+      return this.faker.helpers.replaceSymbolWithNumber(format);
+  }
 
   // FIXME: this is strange passing in an array index.
   /**
@@ -23,22 +23,19 @@ var Phone = function (faker) {
    * @method faker.phone.phoneFormatsArrayIndex
    * @param phoneFormatsArrayIndex
    */
-  self.phoneNumberFormat = function (phoneFormatsArrayIndex) {
+  phoneNumberFormat(phoneFormatsArrayIndex?: number) {
       phoneFormatsArrayIndex = phoneFormatsArrayIndex || 0;
-      return faker.helpers.replaceSymbolWithNumber(faker.definitions.phone_number.formats[phoneFormatsArrayIndex]);
-  };
+      return this.faker.helpers.replaceSymbolWithNumber(this.faker.definitions.phone_number.formats[phoneFormatsArrayIndex]);
+  }
 
   /**
    * phoneFormats
    *
    * @method faker.phone.phoneFormats
    */
-  self.phoneFormats = function () {
-    return faker.random.arrayElement(faker.definitions.phone_number.formats);
-  };
-  
-  return self;
+  phoneFormats() {
+    return this.faker.random.arrayElement(this.faker.definitions.phone_number.formats);
+  }
+}
 
-};
-
-module['exports'] = Phone;
+export = Phone;

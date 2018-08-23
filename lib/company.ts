@@ -2,19 +2,17 @@
  *
  * @namespace faker.company
  */
-var Company = function (faker) {
-  
-  var self = this;
-  var f = faker.fake;
-  
+class Company {
+  constructor(private faker: any) { }
+
   /**
    * suffixes
    *
    * @method faker.company.suffixes
    */
-  this.suffixes = function () {
+  suffixes() {
     // Don't want the source array exposed to modification, so return a copy
-    return faker.definitions.company.suffix.slice(0);
+    return this.faker.definitions.company.suffix.slice(0);
   }
 
   /**
@@ -23,8 +21,7 @@ var Company = function (faker) {
    * @method faker.company.companyName
    * @param {string} format
    */
-  this.companyName = function (format) {
-
+  companyName(format: number | string[]) {
     var formats = [
       '{{name.lastName}} {{company.companySuffix}}',
       '{{name.lastName}} - {{name.lastName}}',
@@ -32,10 +29,10 @@ var Company = function (faker) {
     ];
 
     if (typeof format !== "number") {
-      format = faker.random.number(formats.length - 1);
+      format = this.faker.random.number(formats.length - 1);
     }
 
-    return f(formats[format]);
+    return this.faker.fake(formats[<number>format]);
   }
 
   /**
@@ -43,8 +40,8 @@ var Company = function (faker) {
    *
    * @method faker.company.companySuffix
    */
-  this.companySuffix = function () {
-      return faker.random.arrayElement(faker.company.suffixes());
+  companySuffix() {
+      return this.faker.random.arrayElement(this.faker.company.suffixes());
   }
 
   /**
@@ -52,8 +49,8 @@ var Company = function (faker) {
    *
    * @method faker.company.catchPhrase
    */
-  this.catchPhrase = function () {
-    return f('{{company.catchPhraseAdjective}} {{company.catchPhraseDescriptor}} {{company.catchPhraseNoun}}')
+  catchPhrase() {
+    return this.faker.fake('{{company.catchPhraseAdjective}} {{company.catchPhraseDescriptor}} {{company.catchPhraseNoun}}')
   }
 
   /**
@@ -61,8 +58,8 @@ var Company = function (faker) {
    *
    * @method faker.company.bs
    */
-  this.bs = function () {
-    return f('{{company.bsBuzz}} {{company.bsAdjective}} {{company.bsNoun}}');
+  bs() {
+    return this.faker.fake('{{company.bsBuzz}} {{company.bsAdjective}} {{company.bsNoun}}');
   }
 
   /**
@@ -70,8 +67,8 @@ var Company = function (faker) {
    *
    * @method faker.company.catchPhraseAdjective
    */
-  this.catchPhraseAdjective = function () {
-      return faker.random.arrayElement(faker.definitions.company.adjective);
+  catchPhraseAdjective() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.adjective);
   }
 
   /**
@@ -79,8 +76,8 @@ var Company = function (faker) {
    *
    * @method faker.company.catchPhraseDescriptor
    */
-  this.catchPhraseDescriptor = function () {
-      return faker.random.arrayElement(faker.definitions.company.descriptor);
+  catchPhraseDescriptor() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.descriptor);
   }
 
   /**
@@ -88,8 +85,8 @@ var Company = function (faker) {
    *
    * @method faker.company.catchPhraseNoun
    */
-  this.catchPhraseNoun = function () {
-      return faker.random.arrayElement(faker.definitions.company.noun);
+  catchPhraseNoun() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.noun);
   }
 
   /**
@@ -97,8 +94,8 @@ var Company = function (faker) {
    *
    * @method faker.company.bsAdjective
    */
-  this.bsAdjective = function () {
-      return faker.random.arrayElement(faker.definitions.company.bs_adjective);
+  bsAdjective() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.bs_adjective);
   }
 
   /**
@@ -106,8 +103,8 @@ var Company = function (faker) {
    *
    * @method faker.company.bsBuzz
    */
-  this.bsBuzz = function () {
-      return faker.random.arrayElement(faker.definitions.company.bs_verb);
+  bsBuzz() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.bs_verb);
   }
 
   /**
@@ -115,10 +112,9 @@ var Company = function (faker) {
    *
    * @method faker.company.bsNoun
    */
-  this.bsNoun = function () {
-      return faker.random.arrayElement(faker.definitions.company.bs_noun);
+  bsNoun() {
+      return this.faker.random.arrayElement(this.faker.definitions.company.bs_noun);
   }
-  
 }
 
-module['exports'] = Company;
+export = Company;

@@ -2,9 +2,27 @@
  *
  * @namespace faker.address
  */
-function Address (faker) {
-  var f = faker.fake,
-      Helpers = faker.helpers;
+class Address {
+  constructor(private faker: any) {
+    this.Helpers = this.faker.helpers;
+
+    (<any>this.direction).schema = {
+      "description": "Generates a direction. Use optional useAbbr bool to return abbrevation",
+      "sampleResults": ["Northwest", "South", "SW", "E"]
+    };
+
+    (<any>this.cardinalDirection).schema = {
+      "description": "Generates a cardinal direction. Use optional useAbbr boolean to return abbrevation",
+      "sampleResults": ["North", "South", "E", "W"]
+    };
+
+    (<any>this.ordinalDirection).schema = {
+      "description": "Generates an ordinal direction. Use optional useAbbr boolean to return abbrevation",
+      "sampleResults": ["Northwest", "Southeast", "SW", "NE"]
+    };
+  }
+
+  private readonly Helpers: any;
 
   /**
    * Generates random zipcode from format. If format is not specified, the
@@ -13,17 +31,17 @@ function Address (faker) {
    * @method faker.address.zipCode
    * @param {String} format
    */
-  this.zipCode = function(format) {
+  zipCode(format?: string) {
     // if zip format is not specified, use the zip format defined for the locale
     if (typeof format === 'undefined') {
-      var localeFormat = faker.definitions.address.postcode;
+      var localeFormat = this.faker.definitions.address.postcode;
       if (typeof localeFormat === 'string') {
         format = localeFormat;
       } else {
-        format = faker.random.arrayElement(localeFormat);
+        format = this.faker.random.arrayElement(localeFormat);
       }
     }
-    return Helpers.replaceSymbols(format);
+    return this.Helpers.replaceSymbols(format);
   }
 
   /**
@@ -39,9 +57,9 @@ function Address (faker) {
    * * `{{name.lastName}}{{address.citySuffix}}`
    *
    * @method faker.address.city
-   * @param {String} format
+   * @param {Number} format
    */
-  this.city = function (format) {
+  city(format?: number) {
     var formats = [
       '{{address.cityPrefix}} {{name.firstName}}{{address.citySuffix}}',
       '{{address.cityPrefix}} {{name.firstName}}',
@@ -50,19 +68,18 @@ function Address (faker) {
     ];
 
     if (typeof format !== "number") {
-      format = faker.random.number(formats.length - 1);
+      format = this.faker.random.number(formats.length - 1);
     }
 
-    return f(formats[format]);
-
+    return this.faker.fake(formats[format!]);
   }
 
   /**
    * Return a random localized city prefix
    * @method faker.address.cityPrefix
    */
-  this.cityPrefix = function () {
-    return faker.random.arrayElement(faker.definitions.address.city_prefix);
+  cityPrefix() {
+    return this.faker.random.arrayElement(this.faker.definitions.address.city_prefix);
   }
 
   /**
@@ -70,8 +87,8 @@ function Address (faker) {
    *
    * @method faker.address.citySuffix
    */
-  this.citySuffix = function () {
-    return faker.random.arrayElement(faker.definitions.address.city_suffix);
+  citySuffix() {
+    return this.faker.random.arrayElement(this.faker.definitions.address.city_suffix);
   }
 
   /**
@@ -79,19 +96,19 @@ function Address (faker) {
    *
    * @method faker.address.streetName
    */
-  this.streetName = function () {
+  streetName() {
       var result;
-      var suffix = faker.address.streetSuffix();
+      var suffix = this.faker.address.streetSuffix();
       if (suffix !== "") {
           suffix = " " + suffix
       }
 
-      switch (faker.random.number(1)) {
+      switch (this.faker.random.number(1)) {
       case 0:
-          result = faker.name.lastName() + suffix;
+          result = this.faker.name.lastName() + suffix;
           break;
       case 1:
-          result = faker.name.firstName() + suffix;
+          result = this.faker.name.firstName() + suffix;
           break;
       }
       return result;
@@ -106,21 +123,20 @@ function Address (faker) {
    * @method faker.address.streetAddress
    * @param {Boolean} useFullAddress
    */
-  this.streetAddress = function (useFullAddress) {
-      if (useFullAddress === undefined) { useFullAddress = false; }
+  streetAddress(useFullAddress: boolean = false) {
       var address = "";
-      switch (faker.random.number(2)) {
+      switch (this.faker.random.number(2)) {
       case 0:
-          address = Helpers.replaceSymbolWithNumber("#####") + " " + faker.address.streetName();
+          address = this.Helpers.replaceSymbolWithNumber("#####") + " " + this.faker.address.streetName();
           break;
       case 1:
-          address = Helpers.replaceSymbolWithNumber("####") +  " " + faker.address.streetName();
+          address = this.Helpers.replaceSymbolWithNumber("####") +  " " + this.faker.address.streetName();
           break;
       case 2:
-          address = Helpers.replaceSymbolWithNumber("###") + " " + faker.address.streetName();
+          address = this.Helpers.replaceSymbolWithNumber("###") + " " + this.faker.address.streetName();
           break;
       }
-      return useFullAddress ? (address + " " + faker.address.secondaryAddress()) : address;
+      return useFullAddress ? (address + " " + this.faker.address.secondaryAddress()) : address;
   }
 
   /**
@@ -128,8 +144,8 @@ function Address (faker) {
    *
    * @method faker.address.streetSuffix
    */
-  this.streetSuffix = function () {
-      return faker.random.arrayElement(faker.definitions.address.street_suffix);
+  streetSuffix() {
+      return this.faker.random.arrayElement(this.faker.definitions.address.street_suffix);
   }
 
   /**
@@ -137,8 +153,8 @@ function Address (faker) {
    *
    * @method faker.address.streetPrefix
    */
-  this.streetPrefix = function () {
-      return faker.random.arrayElement(faker.definitions.address.street_prefix);
+  streetPrefix() {
+      return this.faker.random.arrayElement(this.faker.definitions.address.street_prefix);
   }
 
   /**
@@ -146,8 +162,8 @@ function Address (faker) {
    *
    * @method faker.address.secondaryAddress
    */
-  this.secondaryAddress = function () {
-      return Helpers.replaceSymbolWithNumber(faker.random.arrayElement(
+  secondaryAddress() {
+      return this.Helpers.replaceSymbolWithNumber(this.faker.random.arrayElement(
           [
               'Apt. ###',
               'Suite ###'
@@ -160,8 +176,8 @@ function Address (faker) {
    *
    * @method faker.address.county
    */
-  this.county = function () {
-    return faker.random.arrayElement(faker.definitions.address.county);
+  county() {
+    return this.faker.random.arrayElement(this.faker.definitions.address.county);
   }
 
   /**
@@ -169,8 +185,8 @@ function Address (faker) {
    *
    * @method faker.address.country
    */
-  this.country = function () {
-    return faker.random.arrayElement(faker.definitions.address.country);
+  country() {
+    return this.faker.random.arrayElement(this.faker.definitions.address.country);
   }
 
   /**
@@ -178,18 +194,17 @@ function Address (faker) {
    *
    * @method faker.address.countryCode
    */
-  this.countryCode = function () {
-    return faker.random.arrayElement(faker.definitions.address.country_code);
+  countryCode() {
+    return this.faker.random.arrayElement(this.faker.definitions.address.country_code);
   }
 
   /**
    * state
    *
    * @method faker.address.state
-   * @param {Boolean} useAbbr
    */
-  this.state = function (useAbbr) {
-      return faker.random.arrayElement(faker.definitions.address.state);
+  state() {
+      return this.faker.random.arrayElement(this.faker.definitions.address.state);
   }
 
   /**
@@ -197,8 +212,8 @@ function Address (faker) {
    *
    * @method faker.address.stateAbbr
    */
-  this.stateAbbr = function () {
-      return faker.random.arrayElement(faker.definitions.address.state_abbr);
+  stateAbbr() {
+      return this.faker.random.arrayElement(this.faker.definitions.address.state_abbr);
   }
 
   /**
@@ -208,10 +223,8 @@ function Address (faker) {
    * @param {Double} max default is 90
    * @param {Double} min default is -90
    */
-  this.latitude = function (max, min) {
-      max = max || 90
-      min = min || -90
-      return faker.random.number({max: max, min:min, precision:0.0001}).toFixed(4);
+  latitude(max: number = 90, min: number = -90) {
+      return this.faker.random.number({max: max, min:min, precision:0.0001}).toFixed(4);
   }
 
   /**
@@ -221,10 +234,8 @@ function Address (faker) {
    * @param {Double} max default is 180
    * @param {Double} min default is -180
    */
-  this.longitude = function (max, min) {
-      max = max || 180
-      min = min || -180
-      return faker.random.number({max: max, min:min, precision:0.0001}).toFixed(4);
+  longitude(max: number = 180, min: number = -180) {
+      return this.faker.random.number({max: max, min:min, precision:0.0001}).toFixed(4);
   }
 
   /**
@@ -233,17 +244,12 @@ function Address (faker) {
    * @method faker.address.direction
    * @param {Boolean} useAbbr return direction abbreviation. defaults to false
    */
-  this.direction = function (useAbbr) {
-    if (typeof useAbbr === 'undefined' || useAbbr === false) {
-      return faker.random.arrayElement(faker.definitions.address.direction);
+  direction(useAbbr: boolean = false) {
+    if (!useAbbr) {
+      return this.faker.random.arrayElement(this.faker.definitions.address.direction);
     }
-    return faker.random.arrayElement(faker.definitions.address.direction_abbr);
+    return this.faker.random.arrayElement(this.faker.definitions.address.direction_abbr);
   }
-
-  this.direction.schema = {
-    "description": "Generates a direction. Use optional useAbbr bool to return abbrevation",
-    "sampleResults": ["Northwest", "South", "SW", "E"]
-  };
 
   /**
    * cardinal direction
@@ -251,21 +257,16 @@ function Address (faker) {
    * @method faker.address.cardinalDirection
    * @param {Boolean} useAbbr return direction abbreviation. defaults to false
    */
-  this.cardinalDirection = function (useAbbr) {
-    if (typeof useAbbr === 'undefined' || useAbbr === false) {
+  cardinalDirection(useAbbr: boolean = false) {
+    if (!useAbbr) {
       return (
-        faker.random.arrayElement(faker.definitions.address.direction.slice(0, 4))
+        this.faker.random.arrayElement(this.faker.definitions.address.direction.slice(0, 4))
       );
     }
     return (
-      faker.random.arrayElement(faker.definitions.address.direction_abbr.slice(0, 4))
+      this.faker.random.arrayElement(this.faker.definitions.address.direction_abbr.slice(0, 4))
     );
   }
-
-  this.cardinalDirection.schema = {
-    "description": "Generates a cardinal direction. Use optional useAbbr boolean to return abbrevation",
-    "sampleResults": ["North", "South", "E", "W"]
-  };
 
   /**
    * ordinal direction
@@ -273,23 +274,16 @@ function Address (faker) {
    * @method faker.address.ordinalDirection
    * @param {Boolean} useAbbr return direction abbreviation. defaults to false
    */
-  this.ordinalDirection = function (useAbbr) {
-    if (typeof useAbbr === 'undefined' || useAbbr === false) {
+  ordinalDirection(useAbbr: boolean = false) {
+    if (!useAbbr) {
       return (
-        faker.random.arrayElement(faker.definitions.address.direction.slice(4, 8))
+        this.faker.random.arrayElement(this.faker.definitions.address.direction.slice(4, 8))
       );
     }
     return (
-      faker.random.arrayElement(faker.definitions.address.direction_abbr.slice(4, 8))
+      this.faker.random.arrayElement(this.faker.definitions.address.direction_abbr.slice(4, 8))
     );
   }
-
-  this.ordinalDirection.schema = {
-    "description": "Generates an ordinal direction. Use optional useAbbr boolean to return abbrevation",
-    "sampleResults": ["Northwest", "Southeast", "SW", "NE"]
-  };
-
-  return this;
 }
 
 export = Address;

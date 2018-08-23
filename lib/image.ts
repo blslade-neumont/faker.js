@@ -2,9 +2,8 @@
  *
  * @namespace faker.image
  */
-var Image = function (faker) {
-
-  var self = this;
+class Image {
+  constructor(private faker: any) { }
 
   /**
    * image
@@ -14,17 +13,17 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.image
    */
-  self.image = function (width, height, randomize) {
+  image(width?: number, height?: number, randomize?: boolean) {
     var categories = ["abstract", "animals", "business", "cats", "city", "food", "nightlife", "fashion", "people", "nature", "sports", "technics", "transport"];
-    return self[faker.random.arrayElement(categories)](width, height, randomize);
-  };
+    return (<any>this)[this.faker.random.arrayElement(categories)](width, height, randomize);
+  }
   /**
    * avatar
    *
    * @method faker.image.avatar
    */
-  self.avatar = function () {
-    return faker.internet.avatar();
+  avatar() {
+    return this.faker.internet.avatar();
   };
   /**
    * imageUrl
@@ -35,11 +34,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.imageUrl
    */
-  self.imageUrl = function (width, height, category, randomize, https) {
-      var width = width || 640;
-      var height = height || 480;
+  imageUrl(width: number = 640, height: number = 480, category?: string, randomize: boolean = false, https: boolean = false) {
       var protocol = 'http://';
-      if (typeof https !== 'undefined' && https === true) {
+      if (https) {
         protocol = 'https://';
       }
       var url = protocol + 'lorempixel.com/' + width + '/' + height;
@@ -48,11 +45,11 @@ var Image = function (faker) {
       }
 
       if (randomize) {
-        url += '?' + faker.random.number()
+        url += '?' + this.faker.random.number()
       }
 
       return url;
-  };
+  }
   /**
    * abstract
    *
@@ -61,9 +58,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.abstract
    */
-  self.abstract = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'abstract', randomize);
-  };
+  abstract(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'abstract', randomize);
+  }
   /**
    * animals
    *
@@ -72,9 +69,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.animals
    */
-  self.animals = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'animals', randomize);
-  };
+  animals(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'animals', randomize);
+  }
   /**
    * business
    *
@@ -83,9 +80,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.business
    */
-  self.business = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'business', randomize);
-  };
+  business(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'business', randomize);
+  }
   /**
    * cats
    *
@@ -94,9 +91,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.cats
    */
-  self.cats = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'cats', randomize);
-  };
+  cats(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'cats', randomize);
+  }
   /**
    * city
    *
@@ -105,9 +102,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.city
    */
-  self.city = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'city', randomize);
-  };
+  city(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'city', randomize);
+  }
   /**
    * food
    *
@@ -116,9 +113,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.food
    */
-  self.food = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'food', randomize);
-  };
+  food(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'food', randomize);
+  }
   /**
    * nightlife
    *
@@ -127,9 +124,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.nightlife
    */
-  self.nightlife = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'nightlife', randomize);
-  };
+  nightlife(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'nightlife', randomize);
+  }
   /**
    * fashion
    *
@@ -138,9 +135,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.fashion
    */
-  self.fashion = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'fashion', randomize);
-  };
+  fashion(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'fashion', randomize);
+  }
   /**
    * people
    *
@@ -149,9 +146,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.people
    */
-  self.people = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'people', randomize);
-  };
+  people(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'people', randomize);
+  }
   /**
    * nature
    *
@@ -160,9 +157,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.nature
    */
-  self.nature = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'nature', randomize);
-  };
+  nature(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'nature', randomize);
+  }
   /**
    * sports
    *
@@ -171,9 +168,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.sports
    */
-  self.sports = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'sports', randomize);
-  };
+  sports(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'sports', randomize);
+  }
   /**
    * technics
    *
@@ -182,9 +179,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.technics
    */
-  self.technics = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'technics', randomize);
-  };
+  technics(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'technics', randomize);
+  }
   /**
    * transport
    *
@@ -193,9 +190,9 @@ var Image = function (faker) {
    * @param {boolean} randomize
    * @method faker.image.transport
    */
-  self.transport = function (width, height, randomize) {
-    return faker.image.imageUrl(width, height, 'transport', randomize);
-  };
+  transport(width?: number, height?: number, randomize?: boolean) {
+    return this.faker.image.imageUrl(width, height, 'transport', randomize);
+  }
   /**
    * dataUri
    *
@@ -203,11 +200,11 @@ var Image = function (faker) {
    * @param {number} height
    * @method faker.image.dataurl
    */
-  self.dataUri = function (width, height) {
+  dataUri(width?: number, height?: number) {
     var rawPrefix = 'data:image/svg+xml;charset=UTF-8,';
     var svgString = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" width="' + width + '" height="' + height + '"> <rect width="100%" height="100%" fill="grey"/>  <text x="0" y="20" font-size="20" text-anchor="start" fill="white">' + width + 'x' + height + '</text> </svg>';
     return rawPrefix + encodeURIComponent(svgString);
-  };
+  }
 }
 
 export = Image;

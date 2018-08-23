@@ -2,8 +2,9 @@
  *
  * @namespace faker.date
  */
-var _Date = function (faker) {
-  var self = this;
+class _Date {
+  constructor(private faker: any) { }
+
   /**
    * past
    *
@@ -11,19 +12,19 @@ var _Date = function (faker) {
    * @param {number} years
    * @param {date} refDate
    */
-  self.past = function (years, refDate) {
+  past(years: number = 1, refDate?: string) {
       var date = (refDate) ? new Date(Date.parse(refDate)) : new Date();
       var range = {
         min: 1000,
-        max: (years || 1) * 365 * 24 * 3600 * 1000
+        max: years * 365 * 24 * 3600 * 1000
       };
 
       var past = date.getTime();
-      past -= faker.random.number(range); // some time from now to N years ago, in milliseconds
+      past -= this.faker.random.number(range); // some time from now to N years ago, in milliseconds
       date.setTime(past);
 
       return date;
-  };
+  }
 
   /**
    * future
@@ -32,19 +33,19 @@ var _Date = function (faker) {
    * @param {number} years
    * @param {date} refDate
    */
-  self.future = function (years, refDate) {
+  future(years: number = 1, refDate?: string) {
       var date = (refDate) ? new Date(Date.parse(refDate)) : new Date();
       var range = {
         min: 1000,
-        max: (years || 1) * 365 * 24 * 3600 * 1000
+        max: years * 365 * 24 * 3600 * 1000
       };
 
       var future = date.getTime();
-      future += faker.random.number(range); // some time from now to N years later, in milliseconds
+      future += this.faker.random.number(range); // some time from now to N years later, in milliseconds
       date.setTime(future);
 
       return date;
-  };
+  }
 
   /**
    * between
@@ -53,14 +54,14 @@ var _Date = function (faker) {
    * @param {date} from
    * @param {date} to
    */
-  self.between = function (from, to) {
+  between(from: string, to: string) {
       var fromMilli = Date.parse(from);
-      var dateOffset = faker.random.number(Date.parse(to) - fromMilli);
+      var dateOffset = this.faker.random.number(Date.parse(to) - fromMilli);
 
       var newDate = new Date(fromMilli + dateOffset);
 
       return newDate;
-  };
+  }
 
   /**
    * recent
@@ -68,19 +69,19 @@ var _Date = function (faker) {
    * @method faker.date.recent
    * @param {number} days
    */
-  self.recent = function (days) {
+  recent(days: number = 1) {
       var date = new Date();
       var range = {
         min: 1000,
-        max: (days || 1) * 24 * 3600 * 1000
+        max: days * 24 * 3600 * 1000
       };
 
       var future = date.getTime();
-      future -= faker.random.number(range); // some time from now to N days ago, in milliseconds
+      future -= this.faker.random.number(range); // some time from now to N days ago, in milliseconds
       date.setTime(future);
 
       return date;
-  };
+  }
 
   /**
    * soon
@@ -88,19 +89,19 @@ var _Date = function (faker) {
    * @method faker.date.soon
    * @param {number} days
    */
-  self.soon = function (days) {
+  soon(days: number = 1) {
       var date = new Date();
       var range = {
         min: 1000,
-        max: (days || 1) * 24 * 3600 * 1000
+        max: days * 24 * 3600 * 1000
       };
 
       var future = date.getTime();
-      future += faker.random.number(range); // some time from now to N days later, in milliseconds
+      future += this.faker.random.number(range); // some time from now to N days later, in milliseconds
       date.setTime(future);
 
       return date;
-  };
+  }
 
   /**
    * month
@@ -108,21 +109,19 @@ var _Date = function (faker) {
    * @method faker.date.month
    * @param {object} options
    */
-  self.month = function (options) {
-      options = options || {};
-
+  month(options: { abbr?: boolean, context?: boolean } = {}) {
       var type = 'wide';
       if (options.abbr) {
           type = 'abbr';
       }
-      if (options.context && typeof faker.definitions.date.month[type + '_context'] !== 'undefined') {
+      if (options.context && typeof this.faker.definitions.date.month[type + '_context'] !== 'undefined') {
           type += '_context';
       }
 
-      var source = faker.definitions.date.month[type];
+      var source = this.faker.definitions.date.month[type];
 
-      return faker.random.arrayElement(source);
-  };
+      return this.faker.random.arrayElement(source);
+  }
 
   /**
    * weekday
@@ -130,24 +129,19 @@ var _Date = function (faker) {
    * @param {object} options
    * @method faker.date.weekday
    */
-  self.weekday = function (options) {
-      options = options || {};
-
+  weekday(options: { abbr?: boolean, context?: boolean } = {}) {
       var type = 'wide';
       if (options.abbr) {
           type = 'abbr';
       }
-      if (options.context && typeof faker.definitions.date.weekday[type + '_context'] !== 'undefined') {
+      if (options.context && typeof this.faker.definitions.date.weekday[type + '_context'] !== 'undefined') {
           type += '_context';
       }
 
-      var source = faker.definitions.date.weekday[type];
+      var source = this.faker.definitions.date.weekday[type];
 
-      return faker.random.arrayElement(source);
-  };
-  
-  return self;
-  
-};
+      return this.faker.random.arrayElement(source);
+  }
+}
 
-module['exports'] = _Date;
+export = _Date;

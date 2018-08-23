@@ -2,74 +2,71 @@
  *
  * @namespace faker.hacker
  */
-var Hacker = function (faker) {
-  var self = this;
-  
+class Hacker {
+  constructor(private faker: any) { }
+
   /**
    * abbreviation
    *
    * @method faker.hacker.abbreviation
    */
-  self.abbreviation = function () {
-    return faker.random.arrayElement(faker.definitions.hacker.abbreviation);
-  };
+  abbreviation() {
+    return this.faker.random.arrayElement(this.faker.definitions.hacker.abbreviation);
+  }
 
   /**
    * adjective
    *
    * @method faker.hacker.adjective
    */
-  self.adjective = function () {
-    return faker.random.arrayElement(faker.definitions.hacker.adjective);
-  };
+  adjective() {
+    return this.faker.random.arrayElement(this.faker.definitions.hacker.adjective);
+  }
 
   /**
    * noun
    *
    * @method faker.hacker.noun
    */
-  self.noun = function () {
-    return faker.random.arrayElement(faker.definitions.hacker.noun);
-  };
+  noun() {
+    return this.faker.random.arrayElement(this.faker.definitions.hacker.noun);
+  }
 
   /**
    * verb
    *
    * @method faker.hacker.verb
    */
-  self.verb = function () {
-    return faker.random.arrayElement(faker.definitions.hacker.verb);
-  };
+  verb() {
+    return this.faker.random.arrayElement(this.faker.definitions.hacker.verb);
+  }
 
   /**
    * ingverb
    *
    * @method faker.hacker.ingverb
    */
-  self.ingverb = function () {
-    return faker.random.arrayElement(faker.definitions.hacker.ingverb);
-  };
+  ingverb() {
+    return this.faker.random.arrayElement(this.faker.definitions.hacker.ingverb);
+  }
 
   /**
    * phrase
    *
    * @method faker.hacker.phrase
    */
-  self.phrase = function () {
-
+  phrase() {
     var data = {
-      abbreviation: self.abbreviation,
-      adjective: self.adjective,
-      ingverb: self.ingverb,
-      noun: self.noun,
-      verb: self.verb
+      abbreviation: this.abbreviation.bind(this),
+      adjective: this.adjective.bind(this),
+      ingverb: this.ingverb.bind(this),
+      noun: this.noun.bind(this),
+      verb: this.verb.bind(this)
     };
 
-    var phrase = faker.random.arrayElement(faker.definitions.hacker.phrase);
-    return faker.helpers.mustache(phrase, data);
-  };
-  
-  return self;
-};
+    var phrase = this.faker.random.arrayElement(this.faker.definitions.hacker.phrase);
+    return this.faker.helpers.mustache(phrase, data);
+  }
+}
 
-module['exports'] = Hacker;
+export = Hacker;

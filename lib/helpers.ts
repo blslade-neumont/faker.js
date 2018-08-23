@@ -2,20 +2,19 @@
  *
  * @namespace faker.helpers
  */
-var Helpers = function (faker) {
-
-  var self = this;
+class Helpers {
+  constructor(private faker: any) { }
 
   /**
-   * backword-compatibility
+   * backward-compatibility
    *
    * @method faker.helpers.randomize
    * @param {array} array
    */
-  self.randomize = function (array) {
-      array = array || ["a", "b", "c"];
-      return faker.random.arrayElement(array);
-  };
+  randomize<T>(array?: T[]) {
+      array = array || <T[]><any>["a", "b", "c"];
+      return this.faker.random.arrayElement(array);
+  }
 
   /**
    * slugifies string
@@ -23,10 +22,9 @@ var Helpers = function (faker) {
    * @method faker.helpers.slugify
    * @param {string} string
    */
-  self.slugify = function (string) {
-      string = string || "";
+  slugify(string: string = '') {
       return string.replace(/ /g, '-').replace(/[^\w\.\-]+/g, '');
-  };
+  }
 
   /**
    * parses string for a symbol and replace it with a random number from 1-10
@@ -35,25 +33,19 @@ var Helpers = function (faker) {
    * @param {string} string
    * @param {string} symbol defaults to `"#"`
    */
-  self.replaceSymbolWithNumber = function (string, symbol) {
-      string = string || "";
-      // default symbol is '#'
-      if (symbol === undefined) {
-          symbol = '#';
-      }
-
+  replaceSymbolWithNumber(string: string = '', symbol: string = '#') {
       var str = '';
       for (var i = 0; i < string.length; i++) {
           if (string.charAt(i) == symbol) {
-              str += faker.random.number(9);
+              str += this.faker.random.number(9);
           } else if (string.charAt(i) == "!"){
-              str += faker.random.number({min: 2, max: 9});
+              str += this.faker.random.number({min: 2, max: 9});
           } else {
               str += string.charAt(i);
           }
       }
       return str;
-  };
+  }
 
   /**
    * parses string for symbols (numbers or letters) and replaces them appropriately
@@ -61,38 +53,35 @@ var Helpers = function (faker) {
    * @method faker.helpers.replaceSymbols
    * @param {string} string
    */
-  self.replaceSymbols = function (string) {
-      string = string || "";
+  replaceSymbols(string: string = '') {
       var alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
       var str = '';
 
       for (var i = 0; i < string.length; i++) {
           if (string.charAt(i) == "#") {
-              str += faker.random.number(9);
+              str += this.faker.random.number(9);
           } else if (string.charAt(i) == "?") {
-              str += faker.random.arrayElement(alpha);
+              str += this.faker.random.arrayElement(alpha);
           } else if (string.charAt(i) == "*") {
-            str += faker.random.boolean() ? faker.random.arrayElement(alpha) : faker.random.number(9);
+            str += this.faker.random.boolean() ? this.faker.random.arrayElement(alpha) : this.faker.random.number(9);
           } else {
               str += string.charAt(i);
           }
       }
       return str;
-  };
+  }
 
   /**
    * replace symbols in a credit card schems including Luhn checksum
    *
    * @method faker.helpers.replaceCreditCardSymbols
-   * @param {string} string
+   * @param {string} str
    * @param {string} symbol
    */
 
-   self.replaceCreditCardSymbols = function(string, symbol) {
-     symbol = symbol || "#";
-
+   replaceCreditCardSymbols(str: string = '', symbol: string = '#') {
      // Function calculating the Luhn checksum of a number string
-     var getCheckBit = function(number) {
+     var getCheckBit = function(number: number[]) {
        number.reverse();
        number = number.map(function(num, index){
          if(index%2 === 0) {
@@ -107,31 +96,27 @@ var Helpers = function (faker) {
        return sum % 10;
      };
 
-     string = string || "";
-     string = faker.helpers.regexpStyleStringParse(string); // replace [4-9] with a random number in range etc...
-     string = faker.helpers.replaceSymbolWithNumber(string, symbol); // replace ### with random numbers
+     str = this.faker.helpers.regexpStyleStringParse(str); // replace [4-9] with a random number in range etc...
+     str = this.faker.helpers.replaceSymbolWithNumber(str, symbol); // replace ### with random numbers
 
-     var numberList = string.replace(/\D/g,"").split("").map(function(num){return parseInt(num);});
-     var checkNum = getCheckBit(numberList);
-     return string.replace("L",checkNum);
-   };
+     var numberList = str.replace(/\D/g,"").split("").map(function(num){return parseInt(num);});
+     var checkNum = <any>getCheckBit(numberList);
+     return str.replace("L",checkNum);
+   }
 
    /** string repeat helper, alternative to String.prototype.repeat.... See PR #382
    *
    * @method faker.helpers.repeatString
-   * @param {string} string
+   * @param {string} str
    * @param {number} num
    */
-   self.repeatString = function(string,num) {
-     if(typeof num ==="undefined") {
-       num = 0;
-     }
+   repeatString(str: string, num: number = 0) {
      var text = "";
      for(var i = 0; i < num; i++){
-       text += string.toString();
+       text += str.toString();
      }
      return text;
-   };
+   }
 
    /**
     * parse string paterns in a similar way to RegExp
@@ -139,16 +124,15 @@ var Helpers = function (faker) {
     * e.g. "#{3}test[1-5]" -> "###test4"
     *
     * @method faker.helpers.regexpStyleStringParse
-    * @param {string} string
+    * @param {string} str
     */
-   self.regexpStyleStringParse = function(string){
-     string = string || "";
+   regexpStyleStringParse(str: string = '') {
      // Deal with range repeat `{min,max}`
      var RANGE_REP_REG = /(.)\{(\d+)\,(\d+)\}/;
      var REP_REG = /(.)\{(\d+)\}/;
      var RANGE_REG = /\[(\d+)\-(\d+)\]/;
      var min, max, tmp, repetitions;
-     var token = string.match(RANGE_REP_REG);
+     var token = str.match(RANGE_REP_REG);
      while(token !== null){
        min = parseInt(token[2]);
        max =  parseInt(token[3]);
@@ -158,21 +142,21 @@ var Helpers = function (faker) {
          max = min;
          min = tmp;
        }
-       repetitions = faker.random.number({min:min,max:max});
-       string = string.slice(0,token.index) + faker.helpers.repeatString(token[1], repetitions) + string.slice(token.index+token[0].length);
-       token = string.match(RANGE_REP_REG);
+       repetitions = this.faker.random.number({min:min,max:max});
+       str = str.slice(0,token.index) + this.faker.helpers.repeatString(token[1], repetitions) + str.slice(token.index!+token[0].length);
+       token = str.match(RANGE_REP_REG);
      }
      // Deal with repeat `{num}`
-     token = string.match(REP_REG);
+     token = str.match(REP_REG);
      while(token !== null){
        repetitions = parseInt(token[2]);
-       string = string.slice(0,token.index)+ faker.helpers.repeatString(token[1], repetitions) + string.slice(token.index+token[0].length);
-       token = string.match(REP_REG);
+       str = str.slice(0,token.index)+ this.faker.helpers.repeatString(token[1], repetitions) + str.slice(token.index!+token[0].length);
+       token = str.match(REP_REG);
      }
      // Deal with range `[min-max]` (only works with numbers for now)
      //TODO: implement for letters e.g. [0-9a-zA-Z] etc.
 
-     token = string.match(RANGE_REG);
+     token = str.match(RANGE_REG);
      while(token !== null){
        min = parseInt(token[1]); // This time we are not capturing the char befor `[]`
        max =  parseInt(token[2]);
@@ -182,28 +166,28 @@ var Helpers = function (faker) {
          max = min;
          min = tmp;
        }
-        string = string.slice(0,token.index) +
-          faker.random.number({min:min, max:max}).toString() +
-          string.slice(token.index+token[0].length);
-        token = string.match(RANGE_REG);
+        str = str.slice(0,token.index) +
+          this.faker.random.number({min:min, max:max}).toString() +
+          str.slice(token.index!+token[0].length);
+        token = str.match(RANGE_REG);
      }
-     return string;
-   };
+     return str;
+   }
 
   /**
    * takes an array and returns it randomized
    *
    * @method faker.helpers.shuffle
-   * @param {array} o
+   * @param {array} arr
    */
-  self.shuffle = function (o) {
-      if (typeof o === 'undefined' || o.length === 0) {
+  shuffle<T>(arr?: T[]) {
+      if (!arr || arr.length === 0) {
         return [];
       }
-      o = o || ["a", "b", "c"];
-      for (var j, x, i = o.length-1; i; j = faker.random.number(i), x = o[--i], o[i] = o[j], o[j] = x);
-      return o;
-  };
+      arr = arr || <any>["a", "b", "c"];
+      for (var j, x, i = arr.length-1; i; j = this.faker.random.number(i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
+      return arr;
+  }
 
   /**
    * mustache
@@ -212,105 +196,102 @@ var Helpers = function (faker) {
    * @param {string} str
    * @param {object} data
    */
-  self.mustache = function (str, data) {
-    if (typeof str === 'undefined') {
-      return '';
-    }
+  mustache(str: string = '', data: any) {
     for(var p in data) {
       var re = new RegExp('{{' + p + '}}', 'g')
       str = str.replace(re, data[p]);
     }
     return str;
-  };
+  }
 
   /**
    * createCard
    *
    * @method faker.helpers.createCard
    */
-  self.createCard = function () {
+  createCard() {
       return {
-          "name": faker.name.findName(),
-          "username": faker.internet.userName(),
-          "email": faker.internet.email(),
+          "name": this.faker.name.findName(),
+          "username": this.faker.internet.userName(),
+          "email": this.faker.internet.email(),
           "address": {
-              "streetA": faker.address.streetName(),
-              "streetB": faker.address.streetAddress(),
-              "streetC": faker.address.streetAddress(true),
-              "streetD": faker.address.secondaryAddress(),
-              "city": faker.address.city(),
-              "state": faker.address.state(),
-              "country": faker.address.country(),
-              "zipcode": faker.address.zipCode(),
+              "streetA": this.faker.address.streetName(),
+              "streetB": this.faker.address.streetAddress(),
+              "streetC": this.faker.address.streetAddress(true),
+              "streetD": this.faker.address.secondaryAddress(),
+              "city": this.faker.address.city(),
+              "state": this.faker.address.state(),
+              "country": this.faker.address.country(),
+              "zipcode": this.faker.address.zipCode(),
               "geo": {
-                  "lat": faker.address.latitude(),
-                  "lng": faker.address.longitude()
+                  "lat": this.faker.address.latitude(),
+                  "lng": this.faker.address.longitude()
               }
           },
-          "phone": faker.phone.phoneNumber(),
-          "website": faker.internet.domainName(),
+          "phone": this.faker.phone.phoneNumber(),
+          "website": this.faker.internet.domainName(),
           "company": {
-              "name": faker.company.companyName(),
-              "catchPhrase": faker.company.catchPhrase(),
-              "bs": faker.company.bs()
+              "name": this.faker.company.companyName(),
+              "catchPhrase": this.faker.company.catchPhrase(),
+              "bs": this.faker.company.bs()
           },
           "posts": [
               {
-                  "words": faker.lorem.words(),
-                  "sentence": faker.lorem.sentence(),
-                  "sentences": faker.lorem.sentences(),
-                  "paragraph": faker.lorem.paragraph()
+                  "words": this.faker.lorem.words(),
+                  "sentence": this.faker.lorem.sentence(),
+                  "sentences": this.faker.lorem.sentences(),
+                  "paragraph": this.faker.lorem.paragraph()
               },
               {
-                  "words": faker.lorem.words(),
-                  "sentence": faker.lorem.sentence(),
-                  "sentences": faker.lorem.sentences(),
-                  "paragraph": faker.lorem.paragraph()
+                  "words": this.faker.lorem.words(),
+                  "sentence": this.faker.lorem.sentence(),
+                  "sentences": this.faker.lorem.sentences(),
+                  "paragraph": this.faker.lorem.paragraph()
               },
               {
-                  "words": faker.lorem.words(),
-                  "sentence": faker.lorem.sentence(),
-                  "sentences": faker.lorem.sentences(),
-                  "paragraph": faker.lorem.paragraph()
+                  "words": this.faker.lorem.words(),
+                  "sentence": this.faker.lorem.sentence(),
+                  "sentences": this.faker.lorem.sentences(),
+                  "paragraph": this.faker.lorem.paragraph()
               }
           ],
-          "accountHistory": [faker.helpers.createTransaction(), faker.helpers.createTransaction(), faker.helpers.createTransaction()]
+          "accountHistory": [this.faker.helpers.createTransaction(), this.faker.helpers.createTransaction(), this.faker.helpers.createTransaction()]
       };
-  };
+  }
 
   /**
    * contextualCard
    *
    * @method faker.helpers.contextualCard
    */
-  self.contextualCard = function () {
-    var name = faker.name.firstName(),
-        userName = faker.internet.userName(name);
+  contextualCard() {
+    var name = this.faker.name.firstName(),
+        userName = this.faker.internet.userName(name);
     return {
         "name": name,
         "username": userName,
-        "avatar": faker.internet.avatar(),
-        "email": faker.internet.email(userName),
-        "dob": faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)")),
-        "phone": faker.phone.phoneNumber(),
+        "avatar": this.faker.internet.avatar(),
+        "email": this.faker.internet.email(userName),
+        "dob": this.faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)")),
+        "phone": this.faker.phone.phoneNumber(),
         "address": {
-            "street": faker.address.streetName(true),
-            "suite": faker.address.secondaryAddress(),
-            "city": faker.address.city(),
-            "zipcode": faker.address.zipCode(),
+            "street": this.faker.address.streetName(true),
+            "suite": this.faker.address.secondaryAddress(),
+            "city": this.faker.address.city(),
+            "zipcode": this.faker.address.zipCode(),
             "geo": {
-                "lat": faker.address.latitude(),
-                "lng": faker.address.longitude()
+                "lat": this.faker.address.latitude(),
+                "lng": this.faker.address.longitude()
             }
         },
-        "website": faker.internet.domainName(),
+        "website": this.faker.internet.domainName(),
         "company": {
-            "name": faker.company.companyName(),
-            "catchPhrase": faker.company.catchPhrase(),
-            "bs": faker.company.bs()
+            "name": this.faker.company.companyName(),
+            "catchPhrase": this.faker.company.catchPhrase(),
+            "bs": this.faker.company.bs()
         }
     };
-  };
+  }
 
 
   /**
@@ -318,58 +299,46 @@ var Helpers = function (faker) {
    *
    * @method faker.helpers.userCard
    */
-  self.userCard = function () {
+  userCard() {
       return {
-          "name": faker.name.findName(),
-          "username": faker.internet.userName(),
-          "email": faker.internet.email(),
+          "name": this.faker.name.findName(),
+          "username": this.faker.internet.userName(),
+          "email": this.faker.internet.email(),
           "address": {
-              "street": faker.address.streetName(true),
-              "suite": faker.address.secondaryAddress(),
-              "city": faker.address.city(),
-              "zipcode": faker.address.zipCode(),
+              "street": this.faker.address.streetName(true),
+              "suite": this.faker.address.secondaryAddress(),
+              "city": this.faker.address.city(),
+              "zipcode": this.faker.address.zipCode(),
               "geo": {
-                  "lat": faker.address.latitude(),
-                  "lng": faker.address.longitude()
+                  "lat": this.faker.address.latitude(),
+                  "lng": this.faker.address.longitude()
               }
           },
-          "phone": faker.phone.phoneNumber(),
-          "website": faker.internet.domainName(),
+          "phone": this.faker.phone.phoneNumber(),
+          "website": this.faker.internet.domainName(),
           "company": {
-              "name": faker.company.companyName(),
-              "catchPhrase": faker.company.catchPhrase(),
-              "bs": faker.company.bs()
+              "name": this.faker.company.companyName(),
+              "catchPhrase": this.faker.company.catchPhrase(),
+              "bs": this.faker.company.bs()
           }
       };
-  };
+  }
 
   /**
    * createTransaction
    *
    * @method faker.helpers.createTransaction
    */
-  self.createTransaction = function(){
+  createTransaction() {
     return {
-      "amount" : faker.finance.amount(),
+      "amount" : this.faker.finance.amount(),
       "date" : new Date(2012, 1, 2),  //TODO: add a ranged date method
-      "business": faker.company.companyName(),
-      "name": [faker.finance.accountName(), faker.finance.mask()].join(' '),
-      "type" : self.randomize(faker.definitions.finance.transaction_type),
-      "account" : faker.finance.account()
+      "business": this.faker.company.companyName(),
+      "name": [this.faker.finance.accountName(), this.faker.finance.mask()].join(' '),
+      "type" : this.randomize(this.faker.definitions.finance.transaction_type),
+      "account" : this.faker.finance.account()
     };
-  };
+  }
+}
 
-  return self;
-
-};
-
-
-/*
-String.prototype.capitalize = function () { //v1.0
-    return this.replace(/\w+/g, function (a) {
-        return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
-    });
-};
-*/
-
-module['exports'] = Helpers;
+export = Helpers;

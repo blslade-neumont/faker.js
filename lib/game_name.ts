@@ -2,84 +2,80 @@
  *
  * @namespace faker.game_name
  */
-var GameName = function (faker) {
-    var self = this;
-  
+class GameName {
+    constructor(private faker: any) { }
+
     /**
      * noun
      *
      * @method faker.game_name.noun
      */
-    self.noun = function () {
-      return faker.random.arrayElement(faker.definitions.game_name.noun);
-    };
-  
+    noun() {
+      return this.faker.random.arrayElement(this.faker.definitions.game_name.noun);
+    }
+
     /**
      * location
      *
      * @method faker.game_name.location
      */
-    self.location = function () {
-        return faker.random.arrayElement(faker.definitions.game_name.location);
-    };
+    location() {
+        return this.faker.random.arrayElement(this.faker.definitions.game_name.location);
+    }
 
     /**
      * dev_name
      *
      * @method faker.game_name.dev_name
      */
-    self.dev_name = function () {
-        return faker.random.arrayElement(faker.definitions.game_name.dev_name);
-    };
+    dev_name() {
+        return this.faker.random.arrayElement(this.faker.definitions.game_name.dev_name);
+    }
 
     /**
      * ingverb
      *
      * @method faker.game_name.ingverb
      */
-    self.ingverb = function () {
-        return faker.random.arrayElement(faker.definitions.game_name.ingverb);
-    };
+    ingverb() {
+        return this.faker.random.arrayElement(this.faker.definitions.game_name.ingverb);
+    }
 
     /**
      * adjective
      *
      * @method faker.game_name.adjective
      */
-    self.adjective = function () {
-        return faker.random.arrayElement(faker.definitions.game_name.adjective);
+    adjective() {
+        return this.faker.random.arrayElement(this.faker.definitions.game_name.adjective);
     };
-  
+
     /**
      * phrase
      *
      * @method faker.game_name.phrase
      */
-    self.phrase = function () {
-        if(!faker.definitions.game_name 
-            || !faker.definitions.game_name.noun 
-            || !faker.definitions.game_name.game_title
-            || !faker.definitions.game_name.ingverb
-            || !faker.definitions.game_name.adjective
-            || !faker.definitions.game_name.location) {
-                return faker.random.randomWords(3);
+    phrase() {
+        if(!this.faker.definitions.game_name 
+            || !this.faker.definitions.game_name.noun 
+            || !this.faker.definitions.game_name.game_title
+            || !this.faker.definitions.game_name.ingverb
+            || !this.faker.definitions.game_name.adjective
+            || !this.faker.definitions.game_name.location) {
+                return this.faker.random.randomWords(3);
         } else {
             var data = {
-                adjective: self.adjective,
-                noun: self.noun,
-                ingverb: self.ingverb,
-                location: self.location,
-                dev_name: self.dev_name,
+                adjective: this.adjective.bind(this),
+                noun: this.noun.bind(this),
+                ingverb: this.ingverb.bind(this),
+                location: this.location.bind(this),
+                dev_name: this.dev_name.bind(this)
             };
         
-            var phrase = faker.random.arrayElement(faker.definitions.game_name.game_title);
-            return faker.helpers.mustache(phrase, data);
+            var phrase = this.faker.random.arrayElement(this.faker.definitions.game_name.game_title);
+            return this.faker.helpers.mustache(phrase, data);
         }
-    };
-    
-    return self;
-  
+    }
 }
-  
-module['exports'] = GameName;
-  
+
+export = GameName;

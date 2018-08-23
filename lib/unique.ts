@@ -1,16 +1,18 @@
-var uniqueExec = require('../vendor/unique');
+import uniqueExec = require('../vendor/unique');
+
 /**
  *
  * @namespace faker.unique
  */
-function Unique (faker) {
+class Unique {
+  constructor(private faker: any) { }
 
   /**
    * unique
    *
    * @method unique
    */
-   this.unique = uniqueExec.exec;
+   readonly unique = uniqueExec.exec;
 }
 
-module['exports'] = Unique;
+export = Unique;

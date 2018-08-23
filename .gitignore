@@ -20,3 +20,4 @@ node_modules/
 # meteor specific
 .build*
 versions.json
+lib/**/*.js

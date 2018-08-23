@@ -3,8 +3,9 @@
 
 */
 
-function Fake (faker) {
-  
+class Fake {
+  constructor(private faker: any) { }
+
   /**
    * Generator method for combining faker methods based on string input
    *
@@ -22,7 +23,7 @@ function Fake (faker) {
    * @method faker.fake
    * @param {string} str
    */
-  this.fake = function fake (str) {
+  fake(str: string): string {
     // setup default response as empty string
     var res = '';
 
@@ -62,16 +63,16 @@ function Fake (faker) {
     // split the method into module and function
     var parts = method.split('.');
 
-    if (typeof faker[parts[0]] === "undefined") {
+    if (typeof this.faker[parts[0]] === "undefined") {
       throw new Error('Invalid module: ' + parts[0]);
     }
 
-    if (typeof faker[parts[0]][parts[1]] === "undefined") {
+    if (typeof this.faker[parts[0]][parts[1]] === "undefined") {
       throw new Error('Invalid method: ' + parts[0] + "." + parts[1]);
     }
 
     // assign the function from the module.function namespace
-    var fn = faker[parts[0]][parts[1]];
+    var fn = this.faker[parts[0]][parts[1]];
 
     // If parameters are populated here, they are always going to be of string type
     // since we might actually be dealing with an object or array,
@@ -97,12 +98,8 @@ function Fake (faker) {
     res = str.replace('{{' + token + '}}', result);
 
     // return the response recursively until we are done finding all tags
-    return fake(res);    
+    return this.fake(res);
   }
-  
-  return this;
-  
-  
 }
 
-module['exports'] = Fake;
+export = Fake;

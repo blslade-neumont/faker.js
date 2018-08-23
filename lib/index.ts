@@ -1,3 +1,34 @@
+import Fake = require('./fake');
+import Unique = require('./unique');
+import Random = require('./random');
+import Helpers = require('./helpers');
+import Name = require('./name');
+import Address = require('./address');
+import Company = require('./company');
+import Finance = require('./finance');
+import Image = require('./image');
+import Lorem = require('./lorem');
+import Hacker = require('./hacker');
+import Internet = require('./internet');
+import Database = require('./database');
+import Phone = require('./phone_number');
+import _Date = require('./date');
+import Commerce = require('./commerce');
+import System = require('./system');
+import Git = require('./git');
+import Insult = require('./insult');
+import Statistic = require('./statistic');
+import GameName = require('./game_name');
+
+function bindAll(obj: any) {
+    Object.keys(obj).forEach(function(meth) {
+        if (typeof obj[meth] === 'function') {
+            obj[meth] = obj[meth].bind(obj);
+        }
+    });
+    return obj;
+}
+
 /*
 
    this index.js file is used for including the faker library as a CommonJS module, instead of a bundle
@@ -21,153 +52,122 @@
  *
  * @namespace faker
  */
-function Faker (opts) {
+class Faker {
+  constructor(opts: any = {}) {
+    this.locales = this.locales || opts.locales || {};
+    this.locale = this.locale || opts.locale || "en";
+    this.localeFallback = this.localeFallback || opts.localeFallback || "en";
 
-  var self = this;
+    this.fake = new Fake(self).fake;
+    this.unique = bindAll(new Unique(self).unique);
+    this.random = bindAll(new Random(self));
+    this.helpers = new Helpers(self);
+    this.name = bindAll(new Name(self));
+    this.address = bindAll(new Address(self));
+    this.company = bindAll(new Company(self));
+    this.finance = bindAll(new Finance(self));
+    this.image = bindAll(new Image(self));
+    this.lorem = bindAll(new Lorem(self));
+    this.hacker = bindAll(new Hacker(self));
+    this.internet = bindAll(new Internet(self));
+    this.database = bindAll(new Database(self));
+    this.phone = bindAll(new Phone(self));
+    this.date = bindAll(new _Date(self));
+    this.commerce = bindAll(new Commerce(self));
+    this.system = bindAll(new System(self));
+    this.git = bindAll(new Git(self));
+    this.insult = bindAll(new Insult(self));
+    this.statistic = bindAll(new Statistic(self));
+    this.game_name = bindAll(new GameName(self));
 
-  opts = opts || {};
+    var _definitions: { [key: string]: string | string[] } = {
+      "name": ["first_name", "middle_name", "last_name", "prefix", "suffix", "gender", "title", "male_first_name", "female_first_name", "male_middle_name", "female_middle_name", "male_last_name", "female_last_name"],
+      "address": ["city_prefix", "city_suffix", "street_suffix", "county", "country", "country_code", "state", "state_abbr", "street_prefix", "postcode", "direction", "direction_abbr"],
+      "company": ["adjective", "noun", "descriptor", "bs_adjective", "bs_noun", "bs_verb", "suffix"],
+      "lorem": ["words"],
+      "hacker": ["abbreviation", "adjective", "noun", "verb", "ingverb", "phrase"],
+      "phone_number": ["formats"],
+      "finance": ["account_type", "transaction_type", "currency", "iban", "credit_card"],
+      "internet": ["avatar_uri", "domain_suffix", "free_email", "example_email", "password"],
+      "commerce": ["color", "department", "product_name", "price", "categories"],
+      "database": ["collation", "column", "engine", "type"],
+      "system": ["mimeTypes"],
+      "date": ["month", "weekday"],
+      "insult": ["ingverb", "noun", "adjective", "phrase"],
+      "git": ["bug","feature","phrase"],
+      "statistic": ["noun", "phrase", "reaction", "subject"],
+      "game_name": ["adjective", "dev_name", "game_title", "ingverb", "location", "noun"],
+      "title": "",
+      "separator": ""
+    };
 
-  // assign options
-  var locales = self.locales || opts.locales || {};
-  var locale = self.locale || opts.locale || "en";
-  var localeFallback = self.localeFallback || opts.localeFallback || "en";
+    // Create a Getter for all definitions.foo.bar properties
+    Object.keys(_definitions).forEach(d => {
+      if (typeof this.definitions[d] === "undefined") {
+        this.definitions[d] = {};
+      }
 
-  self.locales = locales;
-  self.locale = locale;
-  self.localeFallback = localeFallback;
+      if (typeof _definitions[d] === "string") {
+        this.definitions[d] = _definitions[d];
+        return;
+      }
 
-  self.definitions = {};
-
-  function bindAll(obj) {
-      Object.keys(obj).forEach(function(meth) {
-          if (typeof obj[meth] === 'function') {
-              obj[meth] = obj[meth].bind(obj);
+      (<string[]>_definitions[d]).forEach(p => {
+        Object.defineProperty(this.definitions[d], p, {
+          get: function () {
+            if (typeof this.locales[this.locale][d] === "undefined" || typeof this.locales[this.locale][d][p] === "undefined") {
+              // certain localization sets contain less data then others.
+              // in the case of a missing definition, use the default localeFallback to substitute the missing set data
+              // throw new Error('unknown property ' + d + p)
+              return this.locales[this.localeFallback][d][p];
+            } else {
+              // return localized data
+              return this.locales[this.locale][d][p];
+            }
           }
-      });
-      return obj;
-  }
-
-  var Fake = require('./fake');
-  self.fake = new Fake(self).fake;
-
-  var Unique = require('./unique');
-  self.unique = bindAll(new Unique(self).unique);
-
-  var Random = require('./random');
-  self.random = bindAll(new Random(self));
-
-  var Helpers = require('./helpers');
-  self.helpers = new Helpers(self);
-
-  var Name = require('./name');
-  self.name = bindAll(new Name(self));
-
-  var Address = require('./address');
-  self.address = bindAll(new Address(self));
-
-  var Company = require('./company');
-  self.company = bindAll(new Company(self));
-
-  var Finance = require('./finance');
-  self.finance = bindAll(new Finance(self));
-
-  var Image = require('./image');
-  self.image = bindAll(new Image(self));
-
-  var Lorem = require('./lorem');
-  self.lorem = bindAll(new Lorem(self));
-
-  var Hacker = require('./hacker');
-  self.hacker = bindAll(new Hacker(self));
-
-  var Internet = require('./internet');
-  self.internet = bindAll(new Internet(self));
-
-  var Database = require('./database');
-  self.database = bindAll(new Database(self));
-
-  var Phone = require('./phone_number');
-  self.phone = bindAll(new Phone(self));
-
-  var _Date = require('./date');
-  self.date = bindAll(new _Date(self));
-
-  var Commerce = require('./commerce');
-  self.commerce = bindAll(new Commerce(self));
-
-  var System = require('./system');
-  self.system = bindAll(new System(self));
-
-  var Git = require('./git');
-  self.git = bindAll(new Git(self));
-
-  var Insult = require('./insult');
-  self.insult = bindAll(new Insult(self));
-
-  var Statistic = require('./statistic');
-  self.statistic = bindAll(new Statistic(self));
-
-  var GameName = require('./game_name');
-  self.game_name = bindAll(new GameName(self));
-
-  var _definitions = {
-    "name": ["first_name", "middle_name", "last_name", "prefix", "suffix", "gender", "title", "male_first_name", "female_first_name", "male_middle_name", "female_middle_name", "male_last_name", "female_last_name"],
-    "address": ["city_prefix", "city_suffix", "street_suffix", "county", "country", "country_code", "state", "state_abbr", "street_prefix", "postcode", "direction", "direction_abbr"],
-    "company": ["adjective", "noun", "descriptor", "bs_adjective", "bs_noun", "bs_verb", "suffix"],
-    "lorem": ["words"],
-    "hacker": ["abbreviation", "adjective", "noun", "verb", "ingverb", "phrase"],
-    "phone_number": ["formats"],
-    "finance": ["account_type", "transaction_type", "currency", "iban", "credit_card"],
-    "internet": ["avatar_uri", "domain_suffix", "free_email", "example_email", "password"],
-    "commerce": ["color", "department", "product_name", "price", "categories"],
-    "database": ["collation", "column", "engine", "type"],
-    "system": ["mimeTypes"],
-    "date": ["month", "weekday"],
-    "insult": ["ingverb", "noun", "adjective", "phrase"],
-    "title": "",
-    "separator": "",
-    "git": ["bug","feature","phrase"],
-    "statistic": ["noun","subject","phrase", "reaction"],
-    "game_name": ["noun","adjective","game_title", "location", "dev_name", "ingverb"]
-  };
-
-  // Create a Getter for all definitions.foo.bar properties
-  Object.keys(_definitions).forEach(function(d){
-    if (typeof self.definitions[d] === "undefined") {
-      self.definitions[d] = {};
-    }
-
-    if (typeof _definitions[d] === "string") {
-        self.definitions[d] = _definitions[d];
-      return;
-    }
-
-    _definitions[d].forEach(function(p){
-      Object.defineProperty(self.definitions[d], p, {
-        get: function () {
-          if (typeof self.locales[self.locale][d] === "undefined" || typeof self.locales[self.locale][d][p] === "undefined") {
-            // certain localization sets contain less data then others.
-            // in the case of a missing definition, use the default localeFallback to substitute the missing set data
-            // throw new Error('unknown property ' + d + p)
-            return self.locales[localeFallback][d][p];
-          } else {
-            // return localized data
-            return self.locales[self.locale][d][p];
-          }
-        }
+        });
       });
     });
-  });
+  }
 
-};
+  locales: any;
+  locale: string;
+  localeFallback: string;
 
-Faker.prototype.setLocale = function (locale) {
-  this.locale = locale;
+  readonly definitions: any = {};
+
+  seedValue: any;
+
+  fake: any;
+  unique: any;
+  random: Random;
+  helpers: Helpers;
+  name: Name;
+  address: Address;
+  company: Company;
+  finance: Finance;
+  image: Image;
+  lorem: Lorem;
+  hacker: Hacker;
+  internet: Internet;
+  database: Database;
+  phone: Phone;
+  date: _Date;
+  commerce: Commerce;
+  system: System;
+  git: Git;
+  insult: Insult;
+  statistic: Statistic;
+  game_name: GameName;
+
+  setLocale(locale: string) {
+    this.locale = locale;
+  }
+
+  seed(value: any) {
+    this.seedValue = value;
+    this.random = new Random(this, this.seedValue);
+  }
 }
 
-Faker.prototype.seed = function(value) {
-  var Random = require('./random');
-  this.seedValue = value;
-  this.random = new Random(this, this.seedValue);
-}
-module['exports'] = Faker;
+export = Faker;

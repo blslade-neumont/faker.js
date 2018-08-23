@@ -1,17 +1,19 @@
-var mersenne = require('../vendor/mersenne');
+import mersenne = require('../vendor/mersenne');
 
 /**
  *
  * @namespace faker.random
  */
-function Random (faker, seed) {
-  // Use a user provided seed if it exists
-  if (seed) {
-    if (Array.isArray(seed) && seed.length) {
-      mersenne.seed_array(seed);
-    }
-    else {
-      mersenne.seed(seed);
+class Random {
+  constructor(private faker: any, seed?: any) {
+    // Use a user provided seed if it exists
+    if (seed) {
+      if (Array.isArray(seed) && seed.length) {
+        mersenne.seed_array(seed);
+      }
+      else {
+        mersenne.seed(seed);
+      }
     }
   }
   /**
@@ -20,7 +22,7 @@ function Random (faker, seed) {
    * @method faker.random.number
    * @param {mixed} options
    */
-  this.number = function (options) {
+  number(options?: number | { min?: number, max?: number, precision?: number }) {
 
     if (typeof options === "number") {
       options = {
@@ -62,9 +64,9 @@ function Random (faker, seed) {
    * @method faker.random.arrayElement
    * @param {array} array
    */
-  this.arrayElement = function (array) {
+  arrayElement<T>(array: T[]): T {
       array = array || ["a", "b", "c"];
-      var r = faker.random.number({ max: array.length - 1 });
+      var r = this.faker.random.number({ max: array.length - 1 });
       return array[r];
   }
 
@@ -75,11 +77,11 @@ function Random (faker, seed) {
    * @param {array} array
    * @param {number} count number of elements to pick
    */
-  this.arrayElements = function (array, count) {
+  arrayElements<T>(array: T[], count?: number): T[] {
       array = array || ["a", "b", "c"];
 
       if (typeof count !== 'number') {
-        count = faker.random.number({ min: 1, max: array.length });
+        count = this.faker.random.number({ min: 1, max: array.length });
       } else if (count > array.length) {
         count = array.length;
       } else if (count < 0) {
@@ -87,9 +89,9 @@ function Random (faker, seed) {
       }
 
       var arrayCopy = array.slice();
-      var countToRemove = arrayCopy.length - count;
+      var countToRemove = arrayCopy.length - count!;
       for (var i = 0; i < countToRemove; i++) {
-        var indexToRemove = faker.random.number({ max: arrayCopy.length - 1 });
+        var indexToRemove = this.faker.random.number({ max: arrayCopy.length - 1 });
         arrayCopy.splice(indexToRemove, 1);
       }
 
@@ -103,10 +105,10 @@ function Random (faker, seed) {
    * @param {object} object
    * @param {mixed} field
    */
-  this.objectElement = function (object, field) {
+  objectElement(object: any, field?: 'key' | 'value') {
       object = object || { "foo": "bar", "too": "car" };
       var array = Object.keys(object);
-      var key = faker.random.arrayElement(array);
+      var key = this.faker.random.arrayElement(array);
 
       return field === "key" ? key : object[key];
   }
@@ -116,10 +118,10 @@ function Random (faker, seed) {
    *
    * @method faker.random.uuid
    */
-  this.uuid = function () {
+  uuid() {
       var self = this;
       var RFC4122_TEMPLATE = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-      var replacePlaceholders = function (placeholder) {
+      var replacePlaceholders = function(placeholder: string) {
           var random = self.number({ min: 0, max: 15 });
           var value = placeholder == 'x' ? random : (random &0x3 | 0x8);
           return value.toString(16);
@@ -132,19 +134,16 @@ function Random (faker, seed) {
    *
    * @method faker.random.boolean
    */
-  this.boolean = function () {
-      return !!faker.random.number(1)
+  boolean() {
+      return !!this.faker.random.number(1)
   }
 
-  // TODO: have ability to return specific type of word? As in: noun, adjective, verb, etc
   /**
    * word
    *
    * @method faker.random.word
-   * @param {string} type
    */
-  this.word = function randomWord (type) {
-
+  word() {
     var wordMethods = [
     'commerce.department',
     'commerce.productName',
@@ -179,9 +178,9 @@ function Random (faker, seed) {
     'name.jobType'];
 
     // randomly pick from the many faker methods that can generate words
-    var randomWordMethod = faker.random.arrayElement(wordMethods);
-    var result = faker.fake('{{' + randomWordMethod + '}}');
-    return faker.random.arrayElement(result.split(' '));
+    var randomWordMethod = this.faker.random.arrayElement(wordMethods);
+    var result = this.faker.fake('{{' + randomWordMethod + '}}');
+    return this.faker.random.arrayElement(result.split(' '));
   }
 
   /**
@@ -190,13 +189,13 @@ function Random (faker, seed) {
    * @method faker.random.words
    * @param {number} count defaults to a random value between 1 and 3
    */
-  this.words = function randomWords (count) {
+  words(count?: number) {
     var words = [];
     if (typeof count === "undefined") {
-      count = faker.random.number({min:1, max: 3});
+      count = this.faker.random.number({min:1, max: 3});
     }
-    for (var i = 0; i<count; i++) {
-      words.push(faker.random.word());
+    for (var i = 0; i < count!; i++) {
+      words.push(this.faker.random.word());
     }
     return words.join(' ');
   }
@@ -206,8 +205,8 @@ function Random (faker, seed) {
    *
    * @method faker.random.image
    */
-  this.image = function randomImage () {
-    return faker.image.image();
+  image() {
+    return this.faker.image.image();
   }
 
   /**
@@ -215,8 +214,8 @@ function Random (faker, seed) {
    *
    * @method faker.random.locale
    */
-  this.locale = function randomLocale () {
-    return faker.random.arrayElement(Object.keys(faker.locales));
+  locale() {
+    return this.faker.random.arrayElement(Object.keys(this.faker.locales));
   };
 
   /**
@@ -225,14 +224,14 @@ function Random (faker, seed) {
    * @method faker.random.alphaNumeric
    * @param {number} count defaults to 1
    */
-  this.alphaNumeric = function alphaNumeric(count) {
+  alphaNumeric(count?: number) {
     if (typeof count === "undefined") {
       count = 1;
     }
 
     var wholeString = "";
     for(var i = 0; i < count; i++) {
-      wholeString += faker.random.arrayElement(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]);
+      wholeString += this.faker.random.arrayElement(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]);
     }
 
     return wholeString;
@@ -244,21 +243,18 @@ function Random (faker, seed) {
    * @method faker.random.hexaDecimal
    * @param {number} count defaults to 1
    */
-  this.hexaDecimal = function hexaDecimal(count) {
+  hexaDecimal(count?: number) {
     if (typeof count === "undefined") {
       count = 1;
     }
 
     var wholeString = "";
     for(var i = 0; i < count; i++) {
-      wholeString += faker.random.arrayElement(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"]);
+      wholeString += this.faker.random.arrayElement(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"]);
     }
 
     return "0x"+wholeString;
   };
-
-  return this;
-
 }
 
-module['exports'] = Random;
+export = Random;

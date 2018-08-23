@@ -8,15 +8,15 @@ export = {
   pattern100: [
     "001", "002", "003", "004", "005", "006", "007", "008", "009"
   ],
-  toDigitString: function (str) {
-      return str.replace(/[A-Z]/gi, function(match) {
-          return match.toUpperCase().charCodeAt(0) - 55;
+  toDigitString: function(str: string) {
+      return str.replace(/[A-Z]/gi, function(match: string) {
+          return <string><any>(match.toUpperCase().charCodeAt(0) - 55);
       });
   },
-  mod97: function (digitStr) {
+  mod97: function(digitStr: string) {
       var m = 0;
       for (var i = 0; i < digitStr.length; i++) {
-          m = ((m * 10) + (digitStr[i] |0)) % 97;
+          m = ((m * 10) + (<any>digitStr[i] |0)) % 97;
       }
       return m;
   },
