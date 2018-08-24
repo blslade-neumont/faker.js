@@ -42,3 +42,5 @@ import statistic = require('./statistic');
 export { statistic };
 import game_name = require('./game_name');
 export { game_name };
+import superpower = require('./superpower');
+export { superpower };
