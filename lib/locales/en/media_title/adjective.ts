@@ -1,0 +1,5 @@
+export=[
+    "Brilliant",
+    "Yellow",
+    "Sheepish"
+]

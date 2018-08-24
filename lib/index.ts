@@ -20,6 +20,7 @@ import Insult = require('./insult');
 import Statistic = require('./statistic');
 import GameName = require('./game_name');
 import Superpower = require('./superpower');
+import MediaTitle = require('./media_title');
 
 function bindAll(obj: any) {
     Object.keys(obj).forEach(function(meth) {
@@ -81,6 +82,7 @@ class Faker {
     this.statistic = bindAll(new Statistic(this));
     this.game_name = bindAll(new GameName(this));
     this.superpower = bindAll(new Superpower(this));
+    this.media_title = bindAll(new MediaTitle(this));
 
     var _definitions: { [key: string]: string | string[] } = {
       "name": ["first_name", "middle_name", "last_name", "prefix", "suffix", "gender", "title", "male_first_name", "female_first_name", "male_middle_name", "female_middle_name", "male_last_name", "female_last_name"],
@@ -100,6 +102,7 @@ class Faker {
       "statistic": ["noun", "phrase", "reaction", "subject"],
       "game_name": ["adjective", "dev_name", "game_title", "ingverb", "location", "noun"],
       "superpower": ["verb", "noun", "phrase"],
+      "media_title": ["adjective", "author", "phrase", "verb"],
       "title": "",
       "separator": ""
     };
@@ -163,6 +166,7 @@ class Faker {
   statistic: Statistic;
   game_name: GameName;
   superpower: Superpower;
+  media_title: MediaTitle;
 
   setLocale(locale: string) {
     this.locale = locale;
